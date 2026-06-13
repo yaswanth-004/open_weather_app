@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Search Weather{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>🌍 Weather Search</h1>
+
+    <!-- Rate limit badge -->
+    <div class="rate-badge">
+        <span>API calls today: <strong>{{ rate_info.calls_today }}</strong> / {{ rate_info.limit }}</span>
+        <span class="remaining {{ 'low' if rate_info.remaining < 5 else '' }}">
+            {{ rate_info.remaining }} remaining
+        </span>
+    </div>
+
+    <div class="search-card">
+        <h2>Today's Weather</h2>
+        <form action="{{ url_for('weather.today') }}" method="POST">
+            <input type="text" name="country"  placeholder="Country (e.g. India)"   required>
+            <input type="text" name="city"     placeholder="City (e.g. Mumbai)"     required>
+            <input type="text" name="zip_code" placeholder="ZIP / PIN code (optional)">
+            <button type="submit" class="btn-primary">Get Weather</button>
+        </form>
+    </div>
+
+    <div class="search-card">
+        <h2>5-Day Forecast</h2>
+        <form action="{{ url_for('weather.forecast') }}" method="POST">
+            <input type="text" name="country"  placeholder="Country" required>
+            <input type="text" name="city"     placeholder="City"    required>
+            <input type="text" name="zip_code" placeholder="ZIP / PIN code (optional)">
+            <button type="submit" class="btn-secondary">Get Forecast</button>
+        </form>
+    </div>
+
+    <!-- System capacity info -->
+    <div class="capacity-info">
+        <p>Total users: <strong>{{ rate_info.total_users }}</strong> ·
+           System capacity today: <strong>{{ rate_info.capacity }}</strong> calls ·
+           Used: <strong>{{ rate_info.total_calls_today }}</strong>
+        </p>
+    </div>
+</div>
+{% endblock %}

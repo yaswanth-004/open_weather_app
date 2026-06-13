@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Register - WeatherApp{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-toggle">
+        <a href="{{ url_for('auth.register') }}" class="active">Sign Up</a>
+        <a href="{{ url_for('auth.login') }}">Already Registered? Log In</a>
+    </div>
+
+    <h2>Create Account</h2>
+    <form action="{{ url_for('auth.register') }}" method="POST" class="auth-form">
+        <label for="username">Username (no spaces)</label>
+        <input type="text" id="username" name="username" pattern="^\S+$"
+               placeholder="Enter username" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Create password" required>
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password"
+               placeholder="Repeat password" required>
+
+        <label for="role">Account Type</label>
+        <select name="role" id="role-select" onchange="toggleAdminCode(this.value)">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <div id="admin-code-field" style="display:none;">
+            <label>Admin Secret Code</label>
+            <input type="password" name="admin_code" placeholder="Enter admin code">
+        </div>
+
+        <div class="policy-box">
+            <h4>⚠️ Password Requirements:</h4>
+            <ul>
+                <li>At least <strong>8 characters</strong></li>
+                <li>Must contain <strong>alphanumeric</strong> characters</li>
+                <li>No spaces allowed</li>
+            </ul>
+        </div>
+
+        <button type="submit" class="btn btn-block">Register</button>
+    </form>
+</div>
+
+<script>
+function toggleAdminCode(value) {
+    document.getElementById('admin-code-field').style.display =
+        value === 'admin' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Rate Limit Reached{% endblock %}
+
+{% block content %}
+<div class="page-container center">
+    <div class="error-card">
+        <h1>⚠️ Daily Limit Reached</h1>
+        <p>You have used all <strong>{{ rate_info.limit }}</strong> free API calls for today.</p>
+
+        <div class="rate-stats">
+            <p>Your calls today: <strong>{{ rate_info.calls_today }}</strong></p>
+            <p>Total users: <strong>{{ rate_info.total_users }}</strong></p>
+            <p>System capacity: <strong>{{ rate_info.capacity }}</strong> calls/day</p>
+            <p>System used: <strong>{{ rate_info.total_calls_today }}</strong></p>
+        </div>
+
+        <p>Your limit resets at <strong>midnight UTC</strong>.</p>
+
+        <div class="api-info">
+            <h3>About our rate limiting</h3>
+            <p>Each user gets <strong>{{ rate_info.limit }}</strong> free calls per day.</p>
+            <p>System capacity = total users × {{ rate_info.limit }} = 
+               <strong>{{ rate_info.capacity }}</strong> calls/day</p>
+            <p>This ensures fair usage for all {{ rate_info.total_users }} users.</p>
+        </div>
+
+        <a href="{{ url_for('weather.index') }}" class="btn-primary">Back to Search</a>
+    </div>
+</div>
+{% endblock %}

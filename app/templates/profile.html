@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h1>👤 Profile — {{ user.username }}</h1>
+
+    <div class="profile-card">
+        <div class="profile-info">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user.phone }}</p>
+            <p><strong>Role:</strong> <span class="badge badge-{{ user.role }}">{{ user.role }}</span></p>
+            <p><strong>Member since:</strong> {{ user.created_at.strftime('%B %d, %Y') }}</p>
+        </div>
+
+        <!-- Rate limit -->
+        <!-- Rate limit -->
+<!-- Rate limit -->
+<div class="rate-section">
+    <h3>API Usage Today</h3>
+    {% set pct = ((rate_info.calls_today or 0) * 100 // (rate_info.limit if rate_info.limit else 1)) %}
+    {% set pct = [pct, 100] | min %}
+    <div class="rate-bar-container">
+        <div class="rate-bar" style="width: {{ pct }}%"></div>
+    </div>
+    <p>{{ rate_info.calls_today }} / {{ rate_info.limit }} calls used</p>
+</div>
+
+        <!-- Edit form -->
+        <h3>Edit Profile</h3>
+        <form action="{{ url_for('profile.update') }}" method="POST">
+            <input type="text"  name="username" value="{{ user.username }}" placeholder="Username">
+            <input type="email" name="email"    value="{{ user.email }}"    placeholder="Email">
+            <input type="text"  name="phone"    value="{{ user.phone }}"    placeholder="Phone">
+            <input type="password" name="new_password"     placeholder="New password (leave blank to keep)">
+            <input type="password" name="confirm_password" placeholder="Confirm new password">
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
+
+        <form action="{{ url_for('profile.delete_account') }}" method="POST"
+              onsubmit="return confirm('Delete your account? This cannot be undone.')">
+            <button type="submit" class="btn-danger">Delete Account</button>
+        </form>
+    </div>
+
+    <!-- Search history -->
+    <h2>Search History</h2>
+    {% if searches %}
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>City</th><th>Country</th><th>Type</th><th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in searches %}
+            <tr>
+                <td>{{ s.city }}</td>
+                <td>{{ s.country }}</td>
+                <td><span class="badge">{{ s.search_type }}</span></td>
+                <td>{{ s.searched_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No searches yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

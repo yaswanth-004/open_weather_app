@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}API Documentation{% endblock %}
+
+{% block content %}
+<div class="page-container docs">
+    <h1>📖 API Documentation</h1>
+
+    <section class="doc-section">
+        <h2>Overview</h2>
+        <p>WeatherApp uses two external APIs and exposes internal routes for weather data.</p>
+    </section>
+
+    <section class="doc-section">
+        <h2>External APIs Used</h2>
+
+        <div class="api-card">
+            <h3>1. Nominatim (OpenStreetMap)</h3>
+            <p><strong>Purpose:</strong> Convert city/country/ZIP into latitude & longitude.</p>
+            <p><strong>Endpoint:</strong> <code>https://nominatim.openstreetmap.org/search</code></p>
+            <p><strong>Method:</strong> GET</p>
+            <p><strong>Returns:</strong> List of location objects with lat/lon.</p>
+            <p><strong>Rate limit:</strong> 1 request/second (free, no key needed).</p>
+        </div>
+
+        <div class="api-card">
+            <h3>2. OpenWeatherMap</h3>
+            <p><strong>Purpose:</strong> Fetch current weather and 5-day forecasts.</p>
+
+            <h4>Current Weather</h4>
+            <p><strong>Endpoint:</strong> <code>https://api.openweathermap.org/data/2.5/weather</code></p>
+            <p><strong>Params:</strong> lat, lon, appid, units=metric</p>
+            <p><strong>Returns:</strong> Temperature, humidity, wind, pressure, sunrise/sunset, icon.</p>
+
+            <h4>5-Day Forecast</h4>
+            <p><strong>Endpoint:</strong> <code>https://api.openweathermap.org/data/2.5/forecast</code></p>
+            <p><strong>Params:</strong> lat, lon, appid, units=metric, cnt=40</p>
+            <p><strong>Returns:</strong> 40 readings (every 3 hours for 5 days).</p>
+
+            <p><strong>Free tier limit:</strong> 60 calls/minute, 1,000,000 calls/month.</p>
+        </div>
+    </section>
+
+    <section class="doc-section">
+        <h2>Internal App Routes</h2>
+        <table class="docs-table">
+            <thead>
+                <tr><th>Route</th><th>Method</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>/auth/register</td><td>GET, POST</td><td>No</td><td>Create account</td></tr>
+                <tr><td>/auth/login</td><td>GET, POST</td><td>No</td><td>Login, create session</td></tr>
+                <tr><td>/auth/logout</td><td>GET</td><td>Yes</td><td>Clear session</td></tr>
+                <tr><td>/weather/</td><td>GET</td><td>Yes</td><td>Search form</td></tr>
+                <tr><td>/weather/today</td><td>POST</td><td>Yes</td><td>Current weather</td></tr>
+                <tr><td>/weather/forecast</td><td>POST</td><td>Yes</td><td>5-day forecast</td></tr>
+                <tr><td>/profile/</td><td>GET</td><td>Yes</td><td>View profile + history</td></tr>
+                <tr><td>/profile/update</td><td>POST</td><td>Yes</td><td>Edit profile</td></tr>
+                <tr><td>/blog/home</td><td>GET</td><td>Yes</td><td>Blog posts</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="doc-section">
+        <h2>Rate Limiting</h2>
+        <p>Each user gets <strong>20 free API calls per day</strong>.</p>
+        <p>Formula: <code>capacity = total_users × 20</code></p>
+        <p>If your calls_today ≥ 20, you are redirected to the rate limit page until midnight UTC.</p>
+        <p>Multiple frontend requests (today + forecast) each count as 1 API call.</p>
+    </section>
+</div>
+{% endblock %}
